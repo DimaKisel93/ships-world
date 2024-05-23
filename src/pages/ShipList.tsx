@@ -6,6 +6,7 @@ import { Ship } from '../types/types'
 import NationFilter from '../components/filters/NationFilter'
 import ClassFilter from '../components/filters/ClassFilter'
 import LevelFilter from '../components/filters/LevelFilter'
+import { FixedSizeList as List } from 'react-window'
 
 const ShipList = () => {
   const { loading, error, data } = useQuery(GET_SHIPS)
@@ -47,14 +48,13 @@ const ShipList = () => {
         <ClassFilter value={filters.class} onChange={handleFilterChange} />
       </div>
       <div>
-        {filteredShips.map((ship: Ship) => {
-          return (
-            <ShipCard
-              key={ship.title || `${ship.nation.name}-${ship.level}-${ship.type.name}`}
-              ship={ship}
-            />
-          )
-        })}
+        <List height={600} itemCount={filteredShips.length} itemSize={800} width={'100%'}>
+          {({ index, style }) => (
+            <div style={style}>
+              <ShipCard key={filteredShips[index].title} ship={filteredShips[index]} />
+            </div>
+          )}
+        </List>
       </div>
     </div>
   )
